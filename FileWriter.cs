@@ -7,7 +7,7 @@ public class FileWriter
     {
         if (File.Exists(filePath))
         {
-            TryWriteFileAtomically(filePath, content);   
+            TryWriteFileAtomically(filePath, content);
         }
         else
         {
@@ -30,16 +30,16 @@ public class FileWriter
             };
 
         }
-        catch (IOException ioEx) 
+        catch (IOException ioEx)
         {
             Console.WriteLine($"Erro de E/S: {ioEx.Message}");
             throw;
         }
-        catch(UnauthorizedAccessException uaEx)
+        catch (UnauthorizedAccessException uaEx)
         {
             Console.WriteLine($"Acesso não autorizado: {uaEx.Message}");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Erro inesperado: {ex.Message}");
         }
@@ -52,6 +52,23 @@ public class FileWriter
     public void WriteToFileWithManualFlushing(string filePath, string[] lines)
     {
         int bufferSize = 4096;
+
+        using StreamWriter writer = new StreamWriter(
+            filePath,
+            append: true,
+            bufferSize: bufferSize,
+            encoding: Encoding.UTF8);
+
+        foreach (var line in lines)
+        {
+            writer.WriteLine(line);
+
+            if(line.Contains("Flush Now"))
+            {
+                writer.Flush();
+            }
+        }
+
     }
 
     private static void TryWriteFileAtomically(string filePath, string content)
