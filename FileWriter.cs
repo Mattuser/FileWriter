@@ -18,7 +18,7 @@ public class FileWriter
 
     public static void WriteToFileWithExceptionHandling(string filePath, string content)
     {
-        FileStream fileStream = null;
+        FileStream fileStream = null!;
 
         try
         {
@@ -46,6 +46,22 @@ public class FileWriter
         finally
         {
             fileStream?.Close();
+        }
+    }
+
+    public void WriteToFileWithBuffering(string filePath, string[] lines)
+    {
+        int bufferSize = 4096;
+
+        using StreamWriter writer = new StreamWriter(
+            filePath,
+            append: true,
+            bufferSize: bufferSize,
+            encoding: Encoding.UTF8);
+
+        foreach(var line in lines)
+        {
+            writer.WriteLine(line);
         }
     }
 
